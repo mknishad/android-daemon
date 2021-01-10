@@ -1,6 +1,7 @@
 package com.example.daemon.endless
 
 import android.app.*
+import android.app.ActivityManager.RunningAppProcessInfo
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -8,17 +9,13 @@ import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
 import android.os.SystemClock
-import android.provider.Settings
+import android.util.Log
 import android.widget.Toast
 import com.example.daemon.R
-import com.github.kittinunf.fuel.Fuel
-import com.github.kittinunf.fuel.core.extensions.jsonBody
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.*
 
 
 class EndlessService : Service() {
@@ -99,9 +96,34 @@ class EndlessService : Service() {
     GlobalScope.launch(Dispatchers.IO) {
       while (isServiceStarted) {
         launch(Dispatchers.IO) {
-          //pingFakeServer()
+          /*val mActivityManager =
+            this@EndlessService.getSystemService(ACTIVITY_SERVICE) as ActivityManager
+
+          var currentPackageName = ""
+          if (Build.VERSION.SDK_INT > 20) {
+            currentPackageName = mActivityManager.runningAppProcesses[0].processName
+          } else {
+            currentPackageName = mActivityManager.getRunningTasks(1)[0].topActivity!!.packageName
+          }
+
+          Log.d(TAG, "startService: currentPackageName = $currentPackageName")*/
+
+          var topPackageName: String? = null
+          try {
+            val am = this@EndlessService.getSystemService(ACTIVITY_SERVICE) as ActivityManager
+            val appProcesses = am.runningAppProcesses
+            for (appProcess in appProcesses) {
+              Log.d(TAG, "startService: appProcess = ${appProcess.processName}")
+              if (appProcess.importance == RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                topPackageName = appProcess.processName
+              }
+            }
+          } catch (e: Exception) {
+            Log.e(TAG, "startService: ", e)
+          }
+          Log.d(TAG, "Current App in foreground is: $topPackageName")
         }
-        delay(1000)
+        delay(5 * 1000)
       }
       log("End of the loop for the service")
     }
@@ -123,36 +145,6 @@ class EndlessService : Service() {
     }
     isServiceStarted = false
     setServiceState(this, ServiceState.STOPPED)
-  }
-
-  private fun pingFakeServer() {
-    val df = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.mmmZ")
-    val gmtTime = df.format(Date())
-
-    val deviceId =
-      Settings.Secure.getString(applicationContext.contentResolver, Settings.Secure.ANDROID_ID)
-
-    val json =
-      """
-                {
-                    "deviceId": "$deviceId",
-                    "createdAt": "$gmtTime"
-                }
-            """
-    try {
-      Fuel.post("https://jsonplaceholder.typicode.com/posts")
-        .jsonBody(json)
-        .response { _, _, result ->
-          val (bytes, error) = result
-          if (bytes != null) {
-            log("[response bytes] ${String(bytes)}")
-          } else {
-            log("[response error] ${error?.message}")
-          }
-        }
-    } catch (e: Exception) {
-      log("Error making the request: ${e.message}")
-    }
   }
 
   private fun createNotification(): Notification {
@@ -197,5 +189,9 @@ class EndlessService : Service() {
       .setTicker("Ticker text")
       .setPriority(Notification.PRIORITY_HIGH) // for under android 26 compatibility
       .build()
+  }
+
+  companion object {
+    private const val TAG = "EndlessService"
   }
 }

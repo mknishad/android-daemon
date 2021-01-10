@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
   package="com.example.daemon">
 
   <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
   <uses-permission android:name="android.permission.INTERNET" />
   <uses-permission android:name="android.permission.WAKE_LOCK" />
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+  <uses-permission android:name="android.permission.GET_TASKS" />
+  <uses-permission
+    android:name="android.permission.PACKAGE_USAGE_STATS"
+    tools:ignore="ProtectedPermissions" />
 
   <!--<uses-permission android:name="android.permission.WRITE_SETTINGS"/>
   <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />-->
@@ -40,10 +46,10 @@
 
     <service
       android:name=".WindowChangeDetectingService"
-      android:label="@string/accessibility_service_name"
-      android:process=":ServiceProcess"
       android:exported="true"
-      android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+      android:label="@string/accessibility_service_name"
+      android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+      android:process=":ServiceProcess">
       <intent-filter>
         <action android:name="android.accessibilityservice.AccessibilityService" />
       </intent-filter>
