@@ -1,3 +1,5 @@
 <resources>
   <string name="app_name">Daemon</string>
+  <string name="accessibility_service_description">Accibility service</string>
+  <string name="accessibility_service_name">Accessibility Service</string>
 </resources>
