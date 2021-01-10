@@ -7,6 +7,9 @@
   <uses-permission android:name="android.permission.WAKE_LOCK" />
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+  <!--<uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+  <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />-->
+
   <application
     android:allowBackup="true"
     android:icon="@mipmap/ic_launcher"
@@ -38,6 +41,8 @@
     <service
       android:name=".WindowChangeDetectingService"
       android:label="@string/accessibility_service_name"
+      android:process=":ServiceProcess"
+      android:exported="true"
       android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
       <intent-filter>
         <action android:name="android.accessibilityservice.AccessibilityService" />

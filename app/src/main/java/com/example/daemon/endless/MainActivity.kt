@@ -3,6 +3,9 @@ package com.example.daemon.endless
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
+import android.view.accessibility.AccessibilityEvent
+import android.view.accessibility.AccessibilityManager
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.example.daemon.R
@@ -27,6 +30,31 @@ class MainActivity : AppCompatActivity() {
         log("STOP THE FOREGROUND SERVICE ON DEMAND")
         actionOnService(Actions.STOP)
       }
+    }
+
+    openAccessibilitySettings()
+  }
+
+  private fun enableAccessibilitySettings() {
+    //TODO: First add WRITE_SETTINGS and WRITE_SECURE_SETTINGS permissions in AndroidManifest.xml
+
+    Settings.Secure.putString(contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES,
+    "com.example.daemon/.WindowChangeDetectingService")
+    Settings.Secure.putString(contentResolver, Settings.Secure.ACCESSIBILITY_ENABLED,"1")
+  }
+
+  private fun openAccessibilitySettings() {
+    val am = this.getSystemService(ACCESSIBILITY_SERVICE) as AccessibilityManager
+    val accessibilityServiceList = am.getEnabledAccessibilityServiceList(AccessibilityEvent.TYPES_ALL_MASK)
+    var found = false
+    accessibilityServiceList.forEach {
+      if (it.eventTypes == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+        found = true
+      }
+    }
+    if (!found) {
+      val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+      startActivity(intent)
     }
   }
 

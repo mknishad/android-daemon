@@ -3,6 +3,7 @@ package com.example.daemon
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.AccessibilityServiceInfo
 import android.content.ComponentName
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.os.Build
@@ -41,6 +42,12 @@ class WindowChangeDetectingService : AccessibilityService() {
       }
     }
   }
+
+  override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    return START_STICKY
+  }
+
+
 
   private fun tryGetActivity(componentName: ComponentName): ActivityInfo? {
     return try {
