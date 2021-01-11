@@ -4,6 +4,7 @@ import android.app.*
 import android.app.ActivityManager.RunningAppProcessInfo
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Color
 import android.os.Build
 import android.os.IBinder
@@ -22,6 +23,7 @@ class EndlessService : Service() {
 
   private var wakeLock: PowerManager.WakeLock? = null
   private var isServiceStarted = false
+  private var screenStateReceiver: ScreenStateReceiver? = null
 
   override fun onBind(intent: Intent): IBinder? {
     log("Some component want to bind with the service")
@@ -53,12 +55,14 @@ class EndlessService : Service() {
     log("The service has been created".toUpperCase())
     val notification = createNotification()
     startForeground(1, notification)
+    registerScreenStateReceiver()
   }
 
   override fun onDestroy() {
     super.onDestroy()
     log("The service has been destroyed".toUpperCase())
     Toast.makeText(this, "Service destroyed", Toast.LENGTH_SHORT).show()
+    unregisterScreenStateReceiver()
   }
 
   override fun onTaskRemoved(rootIntent: Intent) {
@@ -189,6 +193,24 @@ class EndlessService : Service() {
       .setTicker("Ticker text")
       .setPriority(Notification.PRIORITY_HIGH) // for under android 26 compatibility
       .build()
+  }
+
+  private fun registerScreenStateReceiver() {
+    screenStateReceiver = ScreenStateReceiver()
+    val filter = IntentFilter()
+    filter.addAction(Intent.ACTION_SCREEN_ON)
+    filter.addAction(Intent.ACTION_SCREEN_OFF)
+    registerReceiver(screenStateReceiver, filter)
+  }
+
+  private fun unregisterScreenStateReceiver() {
+    try {
+      if (screenStateReceiver != null) {
+        unregisterReceiver(screenStateReceiver)
+      }
+    } catch (e: Exception) {
+      Log.e(TAG, "unregisterScreenStateReceiver: ", e)
+    }
   }
 
   companion object {
