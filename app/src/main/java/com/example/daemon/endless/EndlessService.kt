@@ -24,6 +24,7 @@ class EndlessService : Service() {
   private var wakeLock: PowerManager.WakeLock? = null
   private var isServiceStarted = false
   private var screenStateReceiver: ScreenStateReceiver? = null
+  private var batteryLevelReceiver: BatteryLevelReceiver? = null
 
   override fun onBind(intent: Intent): IBinder? {
     log("Some component want to bind with the service")
@@ -56,6 +57,7 @@ class EndlessService : Service() {
     val notification = createNotification()
     startForeground(1, notification)
     registerScreenStateReceiver()
+    registerBatteryLevelReceiver()
   }
 
   override fun onDestroy() {
@@ -63,6 +65,7 @@ class EndlessService : Service() {
     log("The service has been destroyed".toUpperCase())
     Toast.makeText(this, "Service destroyed", Toast.LENGTH_SHORT).show()
     unregisterScreenStateReceiver()
+    unregisterBatteryLevelReceiver()
   }
 
   override fun onTaskRemoved(rootIntent: Intent) {
@@ -210,6 +213,24 @@ class EndlessService : Service() {
       }
     } catch (e: Exception) {
       Log.e(TAG, "unregisterScreenStateReceiver: ", e)
+    }
+  }
+
+  private fun registerBatteryLevelReceiver() {
+    batteryLevelReceiver = BatteryLevelReceiver()
+    val filter = IntentFilter()
+    filter.addAction(Intent.ACTION_BATTERY_LOW)
+    filter.addAction(Intent.ACTION_BATTERY_OKAY)
+    registerReceiver(batteryLevelReceiver, filter)
+  }
+
+  private fun unregisterBatteryLevelReceiver() {
+    try {
+      if (batteryLevelReceiver != null) {
+        unregisterReceiver(batteryLevelReceiver)
+      }
+    } catch (e: Exception) {
+      Log.e(TAG, "unregisterBatteryLevelReceiver: ", e)
     }
   }
 

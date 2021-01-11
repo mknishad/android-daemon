@@ -53,6 +53,15 @@
       </intent-filter>
     </receiver>-->
 
+    <!--<receiver
+      android:name=".endless.BatteryLevelReceiver"
+      android:enabled="true">
+      <intent-filter>
+        <action android:name="android.intent.action.ACTION_BATTERY_LOW" />
+        <action android:name="android.intent.action.ACTION_BATTERY_OKAY" />
+      </intent-filter>
+    </receiver>-->
+
     <service
       android:name=".WindowChangeDetectingService"
       android:exported="true"
