@@ -3,11 +3,11 @@
   xmlns:tools="http://schemas.android.com/tools"
   package="com.example.daemon">
 
-  <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
   <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
   <uses-permission android:name="android.permission.WAKE_LOCK" />
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
   <uses-permission android:name="android.permission.GET_TASKS" />
   <uses-permission
     android:name="android.permission.PACKAGE_USAGE_STATS"
@@ -68,6 +68,14 @@
       <intent-filter>
         <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
         <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+      </intent-filter>
+    </receiver>-->
+
+    <!--<receiver
+      android:name=".endless.NetworkStateReceiver"
+      android:enabled="true">
+      <intent-filter>
+        <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
       </intent-filter>
     </receiver>-->
 

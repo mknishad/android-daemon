@@ -1,7 +1,6 @@
 package com.example.daemon.endless
 
 import android.app.*
-import android.app.ActivityManager.RunningAppProcessInfo
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -13,10 +12,6 @@ import android.os.SystemClock
 import android.util.Log
 import android.widget.Toast
 import com.example.daemon.R
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 
 class EndlessService : Service() {
@@ -26,6 +21,7 @@ class EndlessService : Service() {
   private var screenStateReceiver: ScreenStateReceiver? = null
   private var batteryLevelReceiver: BatteryLevelReceiver? = null
   private var powerConnectionReceiver: PowerConnectionReceiver? = null
+  private var networkStateReceiver: NetworkStateReceiver? = null
 
   override fun onBind(intent: Intent): IBinder? {
     log("Some component want to bind with the service")
@@ -60,6 +56,7 @@ class EndlessService : Service() {
     registerScreenStateReceiver()
     registerBatteryLevelReceiver()
     registerPowerConnectionReceiver()
+    registerNetworkStateReceiver()
   }
 
   override fun onDestroy() {
@@ -69,6 +66,7 @@ class EndlessService : Service() {
     unregisterScreenStateReceiver()
     unregisterBatteryLevelReceiver()
     unregisterPowerConnectionReceiver()
+    unregisterNetworkStateReceiver()
   }
 
   override fun onTaskRemoved(rootIntent: Intent) {
@@ -102,11 +100,11 @@ class EndlessService : Service() {
         }
       }
 
-    // we're starting a loop in a coroutine
+    /*// we're starting a loop in a coroutine
     GlobalScope.launch(Dispatchers.IO) {
       while (isServiceStarted) {
         launch(Dispatchers.IO) {
-          /*val mActivityManager =
+          *//*val mActivityManager =
             this@EndlessService.getSystemService(ACTIVITY_SERVICE) as ActivityManager
 
           var currentPackageName = ""
@@ -116,7 +114,7 @@ class EndlessService : Service() {
             currentPackageName = mActivityManager.getRunningTasks(1)[0].topActivity!!.packageName
           }
 
-          Log.d(TAG, "startService: currentPackageName = $currentPackageName")*/
+          Log.d(TAG, "startService: currentPackageName = $currentPackageName")*//*
 
           var topPackageName: String? = null
           try {
@@ -136,7 +134,7 @@ class EndlessService : Service() {
         delay(5 * 1000)
       }
       log("End of the loop for the service")
-    }
+    }*/
   }
 
   private fun stopService() {
@@ -252,6 +250,23 @@ class EndlessService : Service() {
       }
     } catch (e: Exception) {
       Log.e(TAG, "unregisterPowerConnectionReceiver: ", e)
+    }
+  }
+
+  private fun registerNetworkStateReceiver() {
+    networkStateReceiver = NetworkStateReceiver()
+    val filter = IntentFilter()
+    filter.addAction("android.net.conn.CONNECTIVITY_CHANGE")
+    registerReceiver(networkStateReceiver, filter)
+  }
+
+  private fun unregisterNetworkStateReceiver() {
+    try {
+      if (networkStateReceiver != null) {
+        unregisterReceiver(networkStateReceiver)
+      }
+    } catch (e: Exception) {
+      Log.e(TAG, "unregisterNetworkStateReceiver: ", e)
     }
   }
 
