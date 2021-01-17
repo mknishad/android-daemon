@@ -9,7 +9,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
-import android.widget.Toast
 
 
 class WindowChangeDetectingService : AccessibilityService() {
@@ -36,7 +35,7 @@ class WindowChangeDetectingService : AccessibilityService() {
         )*/
         //val activityInfo = tryGetActivity(componentName)
         Log.d(TAG, "onAccessibilityEvent: package = ${event.packageName}")
-        Toast.makeText(this, event.packageName, Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this, event.packageName, Toast.LENGTH_SHORT).show()
         //val isActivity = activityInfo != null
         //if (isActivity) Log.i(TAG, componentName.flattenToShortString())
       }
