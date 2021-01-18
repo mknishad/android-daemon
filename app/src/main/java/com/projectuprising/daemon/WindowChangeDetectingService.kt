@@ -1,4 +1,4 @@
-package com.example.daemon
+package com.projectuprising.daemon
 
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.AccessibilityServiceInfo

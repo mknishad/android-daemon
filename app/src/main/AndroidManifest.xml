@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
-  package="com.example.daemon">
+  package="com.projectuprising.daemon">
 
   <uses-permission android:name="android.permission.INTERNET" />
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -25,11 +25,11 @@
     android:theme="@style/AppTheme">
 
     <service
-      android:name=".endless.EndlessService"
+      android:name="com.projectuprising.daemon.EndlessService"
       android:enabled="true"
       android:exported="false" />
 
-    <activity android:name=".endless.MainActivity">
+    <activity android:name="com.projectuprising.daemon.MainActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
@@ -37,7 +37,7 @@
     </activity>
 
     <receiver
-      android:name=".endless.StartReceiver"
+      android:name="com.projectuprising.daemon.StartReceiver"
       android:enabled="true">
       <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -80,7 +80,7 @@
     </receiver>-->
 
     <service
-      android:name=".WindowChangeDetectingService"
+      android:name="com.projectuprising.daemon.WindowChangeDetectingService"
       android:exported="true"
       android:label="@string/accessibility_service_name"
       android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"

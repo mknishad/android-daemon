@@ -1,4 +1,4 @@
-package com.example.daemon.endless
+package com.projectuprising.daemon
 
 import android.app.*
 import android.content.Context
@@ -11,7 +11,6 @@ import android.os.PowerManager
 import android.os.SystemClock
 import android.util.Log
 import android.widget.Toast
-import com.example.daemon.R
 
 
 class EndlessService : Service() {
@@ -92,49 +91,13 @@ class EndlessService : Service() {
     isServiceStarted = true
     setServiceState(this, ServiceState.STARTED)
 
-    // we need this lock so our service gets not affected by Doze Mode
+    // we need this lock so our service is not affected by Doze Mode
     wakeLock =
       (getSystemService(Context.POWER_SERVICE) as PowerManager).run {
         newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "EndlessService::lock").apply {
           acquire()
         }
       }
-
-    /*// we're starting a loop in a coroutine
-    GlobalScope.launch(Dispatchers.IO) {
-      while (isServiceStarted) {
-        launch(Dispatchers.IO) {
-          *//*val mActivityManager =
-            this@EndlessService.getSystemService(ACTIVITY_SERVICE) as ActivityManager
-
-          var currentPackageName = ""
-          if (Build.VERSION.SDK_INT > 20) {
-            currentPackageName = mActivityManager.runningAppProcesses[0].processName
-          } else {
-            currentPackageName = mActivityManager.getRunningTasks(1)[0].topActivity!!.packageName
-          }
-
-          Log.d(TAG, "startService: currentPackageName = $currentPackageName")*//*
-
-          var topPackageName: String? = null
-          try {
-            val am = this@EndlessService.getSystemService(ACTIVITY_SERVICE) as ActivityManager
-            val appProcesses = am.runningAppProcesses
-            for (appProcess in appProcesses) {
-              Log.d(TAG, "startService: appProcess = ${appProcess.processName}")
-              if (appProcess.importance == RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
-                topPackageName = appProcess.processName
-              }
-            }
-          } catch (e: Exception) {
-            Log.e(TAG, "startService: ", e)
-          }
-          Log.d(TAG, "Current App in foreground is: $topPackageName")
-        }
-        delay(5 * 1000)
-      }
-      log("End of the loop for the service")
-    }*/
   }
 
   private fun stopService() {

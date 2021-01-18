@@ -1,4 +1,4 @@
-package com.example.daemon.endless
+package com.projectuprising.daemon
 
 import android.util.Log
 

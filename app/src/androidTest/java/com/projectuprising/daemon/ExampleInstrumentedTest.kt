@@ -1,4 +1,4 @@
-package com.example.daemon
+package com.projectuprising.daemon
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

@@ -1,4 +1,4 @@
-package com.example.daemon.endless
+package com.projectuprising.daemon
 
 enum class Actions {
   START,

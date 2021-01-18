@@ -1,4 +1,4 @@
-package com.example.daemon.endless
+package com.projectuprising.daemon
 
 import android.content.Intent
 import android.os.Build
@@ -8,7 +8,6 @@ import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityManager
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import com.example.daemon.R
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,13 +34,13 @@ class MainActivity : AppCompatActivity() {
     openAccessibilitySettings()
   }
 
-  private fun enableAccessibilitySettings() {
+  /*private fun enableAccessibilitySettings() {
     //TODO: First add WRITE_SETTINGS and WRITE_SECURE_SETTINGS permissions in AndroidManifest.xml
 
     Settings.Secure.putString(contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES,
-    "com.example.daemon/.WindowChangeDetectingService")
+    "com.projectuprising.daemon/.WindowChangeDetectingService")
     Settings.Secure.putString(contentResolver, Settings.Secure.ACCESSIBILITY_ENABLED,"1")
-  }
+  }*/
 
   private fun openAccessibilitySettings() {
     val am = this.getSystemService(ACCESSIBILITY_SERVICE) as AccessibilityManager
